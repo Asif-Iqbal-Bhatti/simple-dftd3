@@ -320,7 +320,7 @@ def test_bp_d3_op(atm):
             [+2.85007173009739, -2.64884892757600, +0.71010806424206],
         ]
     )
-    ref = -0.07681029606751344 if atm else -0.07681029606751344
+    ref = -0.07681029606751344
     model = DispersionModel(numbers, positions)
     res = model.get_dispersion(OptimizedPowerDampingParam(method="b97d"), grad=False)
     assert approx(res.get("energy")) == ref
