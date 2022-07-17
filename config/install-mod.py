@@ -33,10 +33,7 @@ modules = []
 for d in listdir(build_dir):
     bd = join(build_dir, d)
     if isdir(bd):
-        for f in listdir(bd):
-            if f.endswith(".mod"):
-                modules.append(join(bd, f))
-
+        modules.extend(join(bd, f) for f in listdir(bd) if f.endswith(".mod"))
 if not exists(module_dir):
     makedirs(module_dir)
 

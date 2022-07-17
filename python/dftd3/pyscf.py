@@ -102,8 +102,9 @@ class DFTD3Dispersion(lib.StreamObject):
         lib.logger.info(self, "** DFTD3 parameter **")
         lib.logger.info(self, "func %s", self.xc)
         lib.logger.info(
-            self, "version %s", self.version + "-atm" if self.atm else self.version
+            self, "version %s", f"{self.version}-atm" if self.atm else self.version
         )
+
         return self
 
     def kernel(self) -> Tuple[float, np.ndarray]:
@@ -316,16 +317,18 @@ def grad(scf_grad):
     if not getattr(scf_grad.base, "with_dftd3", None):
         scf_grad.base = dftd3(scf_grad.base)
 
+
+
     class DFTD3Grad(_DFTD3Grad, scf_grad.__class__):
         def grad_nuc(self, mol=None, atmlst=None):
             nuc_g = scf_grad.__class__.grad_nuc(self, mol, atmlst)
-            with_dftd3 = getattr(self.base, "with_dftd3", None)
-            if with_dftd3:
+            if with_dftd3 := getattr(self.base, "with_dftd3", None):
                 disp_g = with_dftd3.kernel()[1]
                 if atmlst is not None:
                     disp_g = disp_g[atmlst]
                 nuc_g += disp_g
             return nuc_g
+
 
     mfgrad = DFTD3Grad.__new__(DFTD3Grad)
     mfgrad.__dict__.update(scf_grad.__dict__)
