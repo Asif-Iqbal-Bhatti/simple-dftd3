@@ -40,7 +40,7 @@ def test_get_b3lyp():
     }
     actual = get_damping_param("b3lyp", data_file=get_data_file_name())
 
-    for key in expected.keys():
+    for key in expected:
         assert approx(actual[key]) == expected[key]
 
 
@@ -56,7 +56,7 @@ def test_get_m11l():
     }
     actual = get_damping_param("m11l", data_file=get_data_file_name())
 
-    for key in expected.keys():
+    for key in expected:
         assert approx(actual[key]) == expected[key]
 
 
@@ -74,7 +74,7 @@ def test_get_pw6b95():
         "pw6b95", data_file=get_data_file_name(), defaults=["bj"]
     )
 
-    for key in expected.keys():
+    for key in expected:
         assert approx(actual[key]) == expected[key]
 
 

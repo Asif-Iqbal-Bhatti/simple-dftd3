@@ -204,18 +204,17 @@ class DFTD3(Calculator):
         # Invalidate cached calculator and results object
         if _reset:
             self._disp = None
-        else:
-            if system_changes and self._disp is not None:
-                try:
-                    _cell = self.atoms.cell
-                    self._disp.update(
-                        self.atoms.positions / Bohr,
-                        _cell / Bohr,
-                    )
-                # An exception in this part means the geometry is bad,
-                # still we will give a complete reset a try as well
-                except RuntimeError:
-                    self._disp = None
+        elif system_changes and self._disp is not None:
+            try:
+                _cell = self.atoms.cell
+                self._disp.update(
+                    self.atoms.positions / Bohr,
+                    _cell / Bohr,
+                )
+            # An exception in this part means the geometry is bad,
+            # still we will give a complete reset a try as well
+            except RuntimeError:
+                self._disp = None
 
     def _create_api_calculator(self) -> DispersionModel:
         """Create a new API calculator object"""
@@ -240,7 +239,10 @@ class DFTD3(Calculator):
         """Create a new API damping parameter object"""
 
         try:
-            params_tweaks = self.parameters.params_tweaks if self.parameters.params_tweaks else {"method": self.parameters.get("method")} 
+            params_tweaks = self.parameters.params_tweaks or {
+                "method": self.parameters.get("method")
+            }
+
             dpar = _damping_param[self.parameters.get("damping")](**params_tweaks)
 
         except RuntimeError:
